@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX With jQuery</title>
+    <link href="assets/boostrap/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<h1>Hello AJAX...</h1>
+<button id="btn" type="button">Send Request File</button>
+<p id="para"></p>
+<hr>
+<!--======================================================With XML======================================================-->
+
+<h1>Hello AJAX With XML...</h1>
+<button id="btn2" type="button">Send Request XML</button>
+<p id="para2"></p>
+<div class="mb-5 mt-4 table-wrapper-scroll-y my-custom-scrollbar " >
+    <table id="tbl" class="table table-hover table-borderless table-striped ">
+        <thead class="bg-primary text-light">
+        <tr>
+            <th scope="col">Customer ID</th>
+            <th scope="col">Customer Name</th>
+            <th scope="col">Customer Address</th>
+            <th scope="col">Customer Salary</th>
+        </tr>
+        </thead>
+        <tbody id="tblCustomer">
+        </tbody>
+    </table>
+</div>
+
+<!--======================================================With JSON======================================================-->
+
+<h1>Hello AJAX With JSON...</h1>
+<button id="btn3" type="button">Send Request JSON</button>
+<p id="para3"></p>
+<div class="mb-5 mt-4 table-wrapper-scroll-y my-custom-scrollbar " >
+    <table id="tbl2" class="table table-hover table-borderless table-striped ">
+        <thead class="bg-primary text-light">
+        <tr>
+            <th scope="col">Customer ID</th>
+            <th scope="col">Customer Name</th>
+            <th scope="col">Customer Address</th>
+            <th scope="col">Customer Salary</th>
+        </tr>
+        </thead>
+        <tbody id="tblCustomer2">
+        </tbody>
+    </table>
+</div>
+
+<script src="assets/jquery-3.7.0.min.js"></script>
+<script>
+  $('#btn').click(function (){
+    console.log("Start");
+
+    $.ajax({
+      url:"db/db.txt",
+      success:function (resp){
+        $("#para").text(resp);
+      },
+      error:function(xhr){
+          console.log(xhr);
+      }
+    });
+    console.log("Ended");
+  });
+
+  <!--======================================================With XML======================================================-->
+
+  $('#btn2').click(function (){
+      console.log("Start");
+      $("#tblCustomer").empty();
+      $.ajax({
+          url:"db/db.xml",
+          success:function (resp){
+              let ob=$(resp);
+              for (let i = 0; i <  ob.children().children().length; i++) {
+                  var id =ob.children().children().eq(i).find("id").text();
+                  var name =ob.children().children().eq(i).find("name").text();
+                  var address =ob.children().children().eq(i).find("address").text();
+                  var salary =ob.children().children().eq(i).find("salary").text();
+
+                  let row=`<tr><td>${id}</td><td>${name}</td><td>${address}</td><td>${salary}</td></tr>`;
+                  $("#tblCustomer").append(row);
+              }
+          },
+          error:function(xhr){
+              console.log(xhr);
+          }
+      });
+      console.log("Ended");
+  });
+
+  <!--======================================================With JSON======================================================-->
+
+  $("#btn3").click(function (){
+      $.ajax({
+          url:"db/db.json",
+          success:function (resp){
+              for (var i in resp){
+                 var id = resp[i].id;
+                 var name =resp[i].name;
+                 var address = resp[i].address;
+                 var salary = resp[i].salary;
+                  let row=`<tr><td>${id}</td><td>${name}</td><td>${address}</td><td>${salary}</td></tr>`;
+                  $("#tblCustomer2").append(row);
+              }
+          },
+          error:function (xhr){
+              console.log(xhr);
+          }
+      })
+  })
+</script>
+
+</body>
+</html>
